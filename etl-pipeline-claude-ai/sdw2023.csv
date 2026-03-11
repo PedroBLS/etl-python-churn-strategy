@@ -1,0 +1,11 @@
+ID,Name,Email,Plan,UsageScore,MonthsActive,LastLogin
+1,Ana Silva,ana.silva@email.com,Premium,12,3,2023-09-01
+2,Bruno Costa,bruno.costa@email.com,Basic,45,8,2023-09-10
+3,Carla Mendes,carla.mendes@email.com,Premium,78,14,2023-09-15
+4,Diego Souza,diego.souza@email.com,Basic,5,1,2023-08-20
+5,Elena Ferreira,elena.ferreira@email.com,Pro,90,22,2023-09-18
+6,Felipe Lima,felipe.lima@email.com,Basic,18,2,2023-08-30
+7,Gabriela Rocha,gabriela.rocha@email.com,Pro,63,11,2023-09-12
+8,Hugo Alves,hugo.alves@email.com,Premium,3,1,2023-08-10
+9,Isabela Nunes,isabela.nunes@email.com,Basic,37,6,2023-09-05
+10,João Pedro,joao.pedro@email.com,Pro,55,9,2023-09-14
