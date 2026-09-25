@@ -4,3 +4,5 @@ matplotlib
 joblib
 jupyter
 anthropic
+pyspark==3.5.*
+setuptools  # PySpark 3.5 ainda importa distutils (removido do Python 3.12+)

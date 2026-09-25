@@ -11,7 +11,8 @@ etl-python-churn-strategy/
 ├── ml/
 │   ├── 01_exploracao_e_tratamento.ipynb   # análise exploratória e tratamento dos dados
 │   ├── 02_modelagem.ipynb                 # Regressão Logística x Random Forest
-│   └── 03_risco_e_mensagens.ipynb         # faixa de risco + mensagem com Claude
+│   ├── 03_risco_e_mensagens.ipynb         # faixa de risco + mensagem com Claude
+│   └── 04_pyspark.ipynb                   # mesmo tratamento + modelo em PySpark (Spark MLlib)
 ├── data/
 │   └── telco_churn.csv                    # base IBM Telco Customer Churn (7.043 clientes)
 ├── models/                                # modelo treinado (gerado pelo notebook 03)
@@ -59,6 +60,13 @@ O notebook 03 transforma a probabilidade prevista em faixa de risco e confere ca
 
 Para cada cliente, a faixa e os fatores do perfil (contrato, tempo de casa, serviços, pagamento) vão no prompt enviado ao Claude, que escreve a mensagem de retenção.
 
+## Versão em PySpark (notebook 04)
+
+O mesmo tratamento e o mesmo tipo de modelo refeitos com **PySpark** (Spark local), pensando em bases que não cabem na memória de uma máquina:
+- Leitura com `spark.read.csv`, conversão de `TotalCharges` com `cast`, remoção dos 11 clientes sem faturamento e agregações com `groupBy` (os números batem com a etapa 01).
+- Pipeline do **Spark MLlib**: `StringIndexer` + `OneHotEncoder` + `VectorAssembler` + `StandardScaler` + `LogisticRegression`, com peso por classe (`weightCol`) no lugar do `class_weight='balanced'`.
+- Resultado no teste (divisão 80/20 com `randomSplit`): **recall 0,842, precisão 0,518, AUC 0,856**. A diferença para o scikit-learn vem principalmente do sorteio diferente da divisão treino/teste, e os dois ficam na mesma faixa.
+
 ## Conclusões
 
 - **O modelo cumpre o objetivo de recall:** no teste, identificou cerca de 80% dos clientes que realmente cancelaram (298 de 374). O custo dessa escolha é que aproximadamente metade dos alertas são falsos positivos (precisão de 0,49), o que é aceitável quando a ação de retenção é barata (uma mensagem ou oferta) comparada ao custo de perder o cliente.
@@ -77,7 +85,7 @@ pip install -r requirements.txt
 jupyter notebook ml/
 ```
 
-Rode os notebooks na ordem 01 → 02 → 03. Para gerar as mensagens, configure a chave da API como variável de ambiente (nunca no código):
+Rode os notebooks na ordem 01 → 02 → 03. O 04 (PySpark) é independente e precisa de Java 8 ou superior instalado. Para gerar as mensagens, configure a chave da API como variável de ambiente (nunca no código):
 
 ```bash
 # Windows (PowerShell)
@@ -91,12 +99,11 @@ Sem a chave, os notebooks rodam normalmente e apenas pulam a geração das mensa
 ## Próximos passos
 
 - [ ] Ajustar o limiar de decisão pelo custo de retenção x custo de perder o cliente
-- [ ] Preparação dos dados em PySpark
 - [ ] Dashboard interativo com Streamlit
 - [ ] Testes unitários com Pytest
 
 ## Tecnologias
 
-Python, Pandas, scikit-learn, Matplotlib, Jupyter, API do Claude (Anthropic).
+Python, Pandas, scikit-learn, PySpark (Spark MLlib), Matplotlib, Jupyter, API do Claude (Anthropic).
 
 Desenvolvido por Pedro Brandão Leal dos Santos, com apoio do **Claude Code** na escrita do código.
