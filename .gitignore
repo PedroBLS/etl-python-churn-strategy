@@ -1,1 +1,7 @@
- 
+.venv/
+.ipynb_checkpoints/
+__pycache__/
+data/telco_tratada.csv
+data/risco_clientes_teste.csv
+data/mensagens_retencao.csv
+models/
